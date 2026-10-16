@@ -35,7 +35,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
           release_branches: main
-          dry_run: true
       - name: Show calculated release
         env:
           PREVIOUS_TAG: ${{ steps.tag.outputs.previous_tag }}
