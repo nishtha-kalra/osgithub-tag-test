@@ -30,12 +30,25 @@ jobs:
           persist-credentials: false
       - name: Bump version and push tag
         id: tag
-        uses: mathieudutour/github-tag-action@a22cf08638b34d5badda920f9daf6e72c477b07b # v6.2
+        uses: mathieudutour/github-tag-action@af99e60ce8132224b8e6ebab5023449fe256ed46 # v7.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
           release_branches: main
-
+          dry_run: true
+      - name: Show calculated release
+        env:
+          PREVIOUS_TAG: ${{ steps.tag.outputs.previous_tag }}
+          NEW_TAG: ${{ steps.tag.outputs.new_tag }}
+          RELEASE_TYPE: ${{ steps.tag.outputs.release_type }}
+          PRERELEASE: ${{ steps.tag.outputs.prerelease }}
+          CHANGELOG: ${{ steps.tag.outputs.changelog }}
+        run: |
+          printf 'Previous tag: %s\n' "$PREVIOUS_TAG"
+          printf 'New tag: %s\n' "$NEW_TAG"
+          printf 'Release type: %s\n' "$RELEASE_TYPE"
+          printf 'Prerelease: %s\n' "$PRERELEASE"
+          printf 'Changelog:\n%s\n' "$CHANGELOG"
   build-and-publish-package:
     runs-on: ubuntu-latest
 
@@ -43,7 +56,7 @@ jobs:
     permissions:
       contents: write
     needs: tag-new-version
-    if: needs.tag-new-version.outputs.tag
+    if: ${{ false }}
     steps:
 
     - name: Checkout
